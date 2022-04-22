@@ -72,5 +72,6 @@ public class JsonGetDto implements JsonDto {
     @Override
     public String getResponseBody() throws JsonProcessingException {
         return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+
     }
 }

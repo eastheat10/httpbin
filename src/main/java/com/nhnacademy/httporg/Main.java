@@ -1,14 +1,13 @@
 package com.nhnacademy.httporg;
 
-import com.nhnacademy.httporg.reponse.*;
-import com.nhnacademy.httporg.request.*;
-import java.io.DataOutputStream;
+import com.nhnacademy.httporg.reponse.ResponseBody;
+import com.nhnacademy.httporg.reponse.ResponseHeader;
+import com.nhnacademy.httporg.request.Request;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
@@ -19,20 +18,20 @@ public class Main {
 
             Socket socket = serverSocket.accept();
 
-            String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
-            System.out.println(ip);
-
             Request request = new Request(socket);
             Map<String, String> requestMap = request.getRequest();
 
-            ResponseHeader header = new ResponseHeader(new HashMap<>(), socket);
-            String s = header.responseHeader();
-            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.write(s.getBytes(StandardCharsets.UTF_8));
+            ResponseHeader header = new ResponseHeader();
+            ResponseBody body = new ResponseBody(requestMap);
 
-            ResponseBody responseBody = new ResponseBody(requestMap);
+            String responseBody = body.getResponseBody();
+            String responseHeader = header.responseHeader(body.getContentLength());
 
-            System.out.println(responseBody.makeBody());
+            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+
+            writer.println(responseHeader);
+            writer.println();
+            writer.println(responseBody);
 
         } catch (IOException e) {
             e.printStackTrace();

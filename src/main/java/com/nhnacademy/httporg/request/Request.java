@@ -21,7 +21,7 @@ public class Request {
     private static final String CONTENT_TYPE = "Content-Type";
 
     private final InputStream in;
-    private String[] inputData; // index 1: request header, index 2: request body
+    private String[] inputData = new String[2]; // index 0: request header, index 1: request body
     private final Map<String, String> requestMap = new HashMap<>();
     private final Socket socket;
 
@@ -33,17 +33,21 @@ public class Request {
     public Map<String, String> getRequest() throws IOException {
         byte[] bytes = new byte[MAX_SIZE];
         in.read(bytes);
+
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(bytes)))) {
             br.lines().forEach(line -> sb.append(line).append(System.lineSeparator()));
         }
 
-        this.inputData = sb.toString().trim().split("\n\n");
+        String[] input = sb.toString().trim().split("\n\n");
 
-        System.out.println(inputData[0]);
-        System.out.println("====");
-//        System.out.println(inputData[1]);
+        inputData[0] = input[0];
+
+        inputData[1] = "";
+        for (int i = 1; i < input.length; i++) {
+            inputData[1] += input[i];
+        }
 
         parse();
 
@@ -75,9 +79,8 @@ public class Request {
         }
 
         String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
-
         requestMap.put("origin", ip);
-        requestMap.put("body", inputData[0]);
+        requestMap.put("body", inputData[1]);
     }
 
     private void parseMultiPart() throws IOException {

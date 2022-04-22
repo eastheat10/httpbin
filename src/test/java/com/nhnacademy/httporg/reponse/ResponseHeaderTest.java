@@ -22,17 +22,12 @@ class ResponseHeaderTest {
 
         Socket socket = serverSocket.accept();
 
-        header = new ResponseHeader(new HashMap<>(), socket);
+        header = new ResponseHeader();
     }
 
     @AfterEach
     void tearDown() throws IOException {
         serverSocket.close();
-    }
-
-    @Test
-    void responseHeader() {
-        header.responseHeader();
     }
 
 }
