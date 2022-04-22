@@ -1,31 +1,36 @@
 package com.nhnacademy.httporg.reponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class ResponseBody {
 
-    private static final String CRLF = "\r\n";
-
     private final Map<String, String> requestMap;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private String responseBody;
 
     public ResponseBody(Map<String, String> map) {
         requestMap = map;
     }
 
-    public String makeBody() throws JsonProcessingException {
+    public String getResponseBody() throws JsonProcessingException {
 
-        JsonDto dto = new JsonDto(requestMap);
+        String method = requestMap.get("method");
+        JsonDto dto;
 
-        String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
-//        System.out.println(result);
+        if (method.equals("POST")) {
+            dto = new JsonPostDto(requestMap);
+        } else {
+            dto = new JsonGetDto(requestMap);
+        }
 
-        return result;
+        this.responseBody = dto.getResponseBody();
+
+        return responseBody;
+    }
+
+    public int getContentLength() {
+        return responseBody.getBytes(StandardCharsets.UTF_8).length;
     }
 
 }
