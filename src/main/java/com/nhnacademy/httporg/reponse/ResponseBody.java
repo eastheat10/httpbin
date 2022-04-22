@@ -20,12 +20,6 @@ public class ResponseBody {
 
     public String makeBody() throws JsonProcessingException {
 
-        JsonDto dto = new JsonDto(requestMap);
-
-        String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
-//        System.out.println(result);
-
-        return result;
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
     }
-
 }
