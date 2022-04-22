@@ -5,21 +5,29 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Request {
     private static final int MAX_SIZE = 4096;
+    private static final String CONTENT_TYPE = "Content-Type";
 
     private final InputStream in;
     private String[] inputData; // index 1: request header, index 2: request body
     private final Map<String, String> requestMap = new HashMap<>();
+    private final Socket socket;
 
     public Request(Socket socket) throws IOException {
         this.in = socket.getInputStream();
+        this.socket = socket;
     }
 
     public Map<String, String> getRequest() throws IOException {
@@ -35,13 +43,16 @@ public class Request {
 
         System.out.println(inputData[0]);
         System.out.println("====");
-        System.out.println(inputData[1]);
+//        System.out.println(inputData[1]);
 
         parse();
 
+        if (requestMap.get("method").equals("POST") && requestMap.get(CONTENT_TYPE).startsWith("multipart/form-data;")) {
+            parseMultiPart();
+        }
+
         return requestMap;
     }
-
 
     private void parse() throws IOException {
         try (BufferedReader br = new BufferedReader(
@@ -59,12 +70,31 @@ public class Request {
                     requestMap.put("protocol", st.nextToken());
                     continue;
                 }
-
                 requestMap.put(splitHeadByColon[0], splitHeadByColon[1]);
             }
         }
 
-        requestMap.put("origin", requestMap.get("Host"));
+        String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+
+        requestMap.put("origin", ip);
         requestMap.put("body", inputData[0]);
+    }
+
+    private void parseMultiPart() throws IOException {
+        try(BufferedReader br = new BufferedReader(
+            new InputStreamReader(
+                new ByteArrayInputStream(inputData[1].getBytes(StandardCharsets.UTF_8))))) {
+            String disposition = null;
+            br.readLine();
+            String input = br.readLine();
+            String[] splitContentDisposition = input.split(": ");
+            String[] dispositions = splitContentDisposition[1].split("; ");
+            Pattern pattern = Pattern.compile("[\"](.*?)[\"]");
+            Matcher matcher = pattern.matcher(dispositions[1]);
+            while(matcher.find()) {
+                disposition = matcher.group();
+            }
+            requestMap.put(splitContentDisposition[0],disposition);
+        }
     }
 }
