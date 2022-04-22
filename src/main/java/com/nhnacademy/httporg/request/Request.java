@@ -22,7 +22,7 @@ public class Request {
         this.in = socket.getInputStream();
     }
 
-    public void getRequest() throws IOException {
+    public Map<String, String> getRequest() throws IOException {
         byte[] bytes = new byte[MAX_SIZE];
         in.read(bytes);
         StringBuilder sb = new StringBuilder();
@@ -31,12 +31,15 @@ public class Request {
             br.lines().forEach(line -> sb.append(line).append(System.lineSeparator()));
         }
 
-        this.inputData = sb.toString().trim().split("\r\n\r\n");
+        this.inputData = sb.toString().trim().split("\n\n");
+
+        System.out.println(inputData[0]);
+        System.out.println("====");
+        System.out.println(inputData[1]);
 
         parse();
 
-//        System.out.println(Arrays.toString(inputData));
-//        System.out.println("====");
+        return requestMap;
     }
 
 
