@@ -1,8 +1,17 @@
 package com.nhnacademy.httporg;
 
+<<<<<<< HEAD
 import com.nhnacademy.httporg.reponse.ResponseHeader;
 import com.nhnacademy.httporg.request.Request;
 import java.io.DataOutputStream;
+=======
+<<<<<<< HEAD
+=======
+import com.nhnacademy.httporg.reponse.ResponseHeader;
+import com.nhnacademy.httporg.request.Request;
+import java.io.DataOutputStream;
+>>>>>>> 4dbcbf8 (modified jackson library)
+>>>>>>> acd9d7e
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -28,6 +37,7 @@ public class Main {
             String s = header.responseHeader();
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.write(s.getBytes(StandardCharsets.UTF_8));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
