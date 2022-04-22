@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,9 +18,11 @@ public class Request {
     private final InputStream in;
     private String[] inputData; // index 1: request header, index 2: request body
     private final Map<String, String> requestMap = new HashMap<>();
+    private final Socket socket;
 
     public Request(Socket socket) throws IOException {
         this.in = socket.getInputStream();
+        this.socket = socket;
     }
 
     public void getRequest() throws IOException {
@@ -61,7 +64,9 @@ public class Request {
             }
         }
 
-        requestMap.put("origin", requestMap.get("Host"));
+        String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+
+        requestMap.put("origin", ip);
         requestMap.put("body", inputData[0]);
     }
 }
