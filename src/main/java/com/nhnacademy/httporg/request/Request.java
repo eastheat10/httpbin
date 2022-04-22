@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Request {
     private static final int MAX_SIZE = 4096;
@@ -38,34 +40,28 @@ public class Request {
     }
 
 
-
     private void parse() throws IOException {
-        String[] splitHeadLine = inputData[0].split("\n");
+        try (BufferedReader br = new BufferedReader(
+            new InputStreamReader(
+                new ByteArrayInputStream(inputData[0].getBytes(StandardCharsets.UTF_8))))) {
+            String input;
 
-        for (int i = 0; i < splitHeadLine.length; i++) {
-            String[] splitHeadByColon = splitHeadLine[i].split(": ");
-            String[] splitHeadBySpace = splitHeadLine[i].split(" ");
+            while ((input = br.readLine()) != null) {
+                String[] splitHeadByColon = input.split(": ");
 
-            if(splitHeadByColon.length == 1) {
-                switch (i) {
-                    case 0:
-                        requestMap.put("method", splitHeadBySpace[0]);
-                        break;
-
-                    case 1:
-                        requestMap.put("request", splitHeadBySpace[1]);
-                        break;
-
-                    case 2:
-                        requestMap.put("http", splitHeadBySpace[2]);
-                        break;
+                if (splitHeadByColon.length == 1) {
+                    StringTokenizer st = new StringTokenizer(splitHeadByColon[0]);
+                    requestMap.put("method", st.nextToken());
+                    requestMap.put("path", st.nextToken());
+                    requestMap.put("protocol", st.nextToken());
+                    continue;
                 }
-            }
-            else {
+
                 requestMap.put(splitHeadByColon[0], splitHeadByColon[1]);
             }
         }
 
         requestMap.put("origin", requestMap.get("Host"));
+        requestMap.put("body", inputData[0]);
     }
 }
