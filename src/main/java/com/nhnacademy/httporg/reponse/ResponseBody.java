@@ -1,10 +1,7 @@
 package com.nhnacademy.httporg.reponse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.util.Map;
 
 public class ResponseBody {
@@ -18,9 +15,9 @@ public class ResponseBody {
         requestMap = map;
     }
 
-    public String makeBody() throws JsonProcessingException {
+    public String makeBody() throws IOException {
 
-        JsonDto dto = new JsonDto(requestMap);
+        JsonPostDto dto = new JsonPostDto(requestMap);
 
         String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
 //        System.out.println(result);

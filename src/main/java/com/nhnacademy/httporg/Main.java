@@ -1,8 +1,7 @@
 package com.nhnacademy.httporg;
 
-import com.nhnacademy.httporg.reponse.ResponseBody;
-import com.nhnacademy.httporg.reponse.ResponseHeader;
-import com.nhnacademy.httporg.request.Request;
+import com.nhnacademy.httporg.reponse.*;
+import com.nhnacademy.httporg.request.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
