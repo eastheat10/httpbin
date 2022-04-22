@@ -1,5 +1,6 @@
 package com.nhnacademy.httporg;
 
+import com.nhnacademy.httporg.reponse.ResponseBody;
 import com.nhnacademy.httporg.reponse.ResponseHeader;
 import com.nhnacademy.httporg.request.Request;
 import java.io.DataOutputStream;
@@ -9,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,12 +24,16 @@ public class Main {
             System.out.println(ip);
 
             Request request = new Request(socket);
-            request.getRequest();
+            Map<String, String> requestMap = request.getRequest();
 
             ResponseHeader header = new ResponseHeader(new HashMap<>(), socket);
             String s = header.responseHeader();
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             dataOutputStream.write(s.getBytes(StandardCharsets.UTF_8));
+
+            ResponseBody responseBody = new ResponseBody(requestMap);
+
+            System.out.println(responseBody.makeBody());
 
         } catch (IOException e) {
             e.printStackTrace();
