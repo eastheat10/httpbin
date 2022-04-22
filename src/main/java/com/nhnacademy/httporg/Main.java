@@ -1,6 +1,5 @@
 package com.nhnacademy.httporg;
 
-import com.nhnacademy.httporg.request.Request;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -16,9 +15,6 @@ public class Main {
 
             String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
             System.out.println(ip);
-
-            Request request = new Request(socket);
-            request.getRequest();
         } catch (IOException e) {
             e.printStackTrace();
         }
