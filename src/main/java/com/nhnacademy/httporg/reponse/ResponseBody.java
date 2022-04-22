@@ -16,13 +16,6 @@ public class ResponseBody {
     }
 
     public String makeBody() throws IOException {
-
-        JsonPostDto dto = new JsonPostDto(requestMap);
-
-        String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
-//        System.out.println(result);
-
-        return result;
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
     }
-
 }
