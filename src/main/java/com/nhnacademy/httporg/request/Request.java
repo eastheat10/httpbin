@@ -1,4 +1,4 @@
-package com.nhnacademy.httporg;
+package com.nhnacademy.httporg.request;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
