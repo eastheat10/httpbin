@@ -35,7 +35,7 @@ public class Request {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(bytes)))) {
-            br.lines().peek(System.out::println).forEach(line -> sb.append(line).append(System.lineSeparator()));
+            br.lines().forEach(line -> sb.append(line).append(System.lineSeparator()));
         }
 
         String[] input = sb.toString().trim().split("\n\n");

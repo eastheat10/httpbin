@@ -2,6 +2,10 @@ package com.nhnacademy.httporg.reponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.httporg.reponse.json.JsonDto;
+import com.nhnacademy.httporg.reponse.json.JsonGetDto;
+import com.nhnacademy.httporg.reponse.json.JsonOrigin;
+import com.nhnacademy.httporg.reponse.json.JsonPostDto;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -14,6 +18,8 @@ public class ResponseBody {
 
     public String getResponseBody() throws JsonProcessingException {
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
         String method = requestMap.get("method");
         JsonDto dto;
 
@@ -21,10 +27,15 @@ public class ResponseBody {
              dto = new JsonPostDto(requestMap);
         } else {
              dto = new JsonGetDto(requestMap);
+            if (requestMap.get("path").equals("/ip")) {
+                JsonOrigin origin = new JsonOrigin(requestMap.get("origin"));
+                responseBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(origin);
+                return responseBody;
+            }
         }
 
         this.responseBody =
-            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
 
         return responseBody;
     }

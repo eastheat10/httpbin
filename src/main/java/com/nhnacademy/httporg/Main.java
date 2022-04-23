@@ -32,28 +32,10 @@ public class Main {
             String responseBody = body.getResponseBody();
             String responseHeader = header.responseHeader(body.getContentLength());
 
+            String response = responseHeader + "\r\n" + responseBody;
+
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            outputStream.write(responseHeader.getBytes(StandardCharsets.UTF_8));
-            outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
-            outputStream.write(responseBody.getBytes(StandardCharsets.UTF_8));
-
-            System.out.println(responseHeader);
-            System.out.println();
-            System.out.println(responseBody);
-
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseHeader.getBytes(
-//                StandardCharsets.UTF_8))))) {
-//                br.lines().forEach(writer::println);
-//            }
-//
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseBody.getBytes(
-//                StandardCharsets.UTF_8))))) {
-//                br.lines().forEach(writer::println);
-//            }
-//
-//            writer.println(responseHeader);
-//            writer.println();
-//            writer.println(responseBody);
+            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
 
         } catch (IOException e) {
             e.printStackTrace();
