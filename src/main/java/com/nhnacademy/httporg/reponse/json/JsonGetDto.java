@@ -46,11 +46,11 @@ public class JsonGetDto implements JsonDto {
     }
 
     private void dataInit() {
-        headers.remove("body");
-        headers.remove("origin");
-        headers.remove("method");
-        headers.remove("path");
-        headers.remove("protocol");
+        headers.remove(StringUtil.BODY);
+        headers.remove(StringUtil.ORIGIN);
+        headers.remove(StringUtil.METHOD);
+        headers.remove(StringUtil.PATH);
+        headers.remove(StringUtil.PROTOCOL);
     }
 
     private Map<String, String> parseArgs(String path) {
@@ -72,5 +72,4 @@ public class JsonGetDto implements JsonDto {
         }
         return args;
     }
-
 }

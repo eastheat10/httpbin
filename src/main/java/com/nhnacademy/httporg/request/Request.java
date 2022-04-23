@@ -1,5 +1,6 @@
 package com.nhnacademy.httporg.request;
 
+import com.nhnacademy.httporg.utils.StringUtil;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.util.regex.Pattern;
 
 public class Request {
     private static final int MAX_SIZE = 4096;
-    private static final String CONTENT_TYPE = "Content-Type";
 
     private final InputStream in;
     private String[] inputData = new String[2]; // index 0: request header, index 1: request body
@@ -49,8 +49,8 @@ public class Request {
 
         parse();
 
-        if (requestMap.get("method").equals("POST") &&
-            requestMap.get(CONTENT_TYPE).startsWith("multipart/form-data;")) {
+        if (requestMap.get(StringUtil.METHOD).equals("POST") &&
+            requestMap.get(StringUtil.CONTENT_TYPE).startsWith("multipart/form-data;")) {
             parseMultiPart();
         }
 
@@ -68,9 +68,9 @@ public class Request {
 
                 if (splitHeadByColon.length == 1) {
                     StringTokenizer st = new StringTokenizer(splitHeadByColon[0]);
-                    requestMap.put("method", st.nextToken());
-                    requestMap.put("path", st.nextToken());
-                    requestMap.put("protocol", st.nextToken());
+                    requestMap.put(StringUtil.METHOD, st.nextToken());
+                    requestMap.put(StringUtil.PATH, st.nextToken());
+                    requestMap.put(StringUtil.PROTOCOL, st.nextToken());
                     continue;
                 }
                 requestMap.put(splitHeadByColon[0], splitHeadByColon[1]);
@@ -81,8 +81,8 @@ public class Request {
             .replace(
                 "/",
                 "");
-        requestMap.put("origin", ip);
-        requestMap.put("body", inputData[1]);
+        requestMap.put(StringUtil.ORIGIN, ip);
+        requestMap.put(StringUtil.BODY, inputData[1]);
     }
 
     private void parseMultiPart() throws IOException {

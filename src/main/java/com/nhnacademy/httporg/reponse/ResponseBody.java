@@ -5,6 +5,7 @@ import com.nhnacademy.httporg.reponse.json.JsonDto;
 import com.nhnacademy.httporg.reponse.json.JsonGetDto;
 import com.nhnacademy.httporg.reponse.json.JsonOrigin;
 import com.nhnacademy.httporg.reponse.json.JsonPostDto;
+import com.nhnacademy.httporg.utils.StringUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -19,14 +20,14 @@ public class ResponseBody {
 
     public String getResponseBody() throws JsonProcessingException {
 
-        String method = requestMap.get("method");
+        String method = requestMap.get(StringUtil.METHOD);
         JsonDto dto;
 
         if (method.equals("POST")) {
             dto = new JsonPostDto(requestMap);
         } else {
-            if (requestMap.get("path").equals("/ip")) {
-                dto = new JsonOrigin(requestMap.get("origin"));
+            if (requestMap.get(StringUtil.PATH).equals("/ip")) {
+                dto = new JsonOrigin(requestMap.get(StringUtil.ORIGIN));
             } else {
                 dto = new JsonGetDto(requestMap);
             }

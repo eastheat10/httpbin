@@ -39,8 +39,8 @@ public class JsonPostDto implements JsonDto {
                 json.put(key, value);
             }
         }
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
+        origin = request.get(StringUtil.ORIGIN);
+        url = request.get(StringUtil.HOST) + request.get(StringUtil.PATH);
         for (String requestKey : request.keySet()) {
             headers.put(requestKey, request.get(requestKey));
         }
@@ -85,11 +85,11 @@ public class JsonPostDto implements JsonDto {
     }
 
     private void dataInit() {
-        headers.remove("body");
-        headers.remove("origin");
-        headers.remove("method");
-        headers.remove("path");
-        headers.remove("protocol");
+        headers.remove(StringUtil.BODY);
+        headers.remove(StringUtil.ORIGIN);
+        headers.remove(StringUtil.METHOD);
+        headers.remove(StringUtil.PATH);
+        headers.remove(StringUtil.PROTOCOL);
     }
 
     private Map<String, String> parseArgs(String path) {
@@ -122,7 +122,7 @@ public class JsonPostDto implements JsonDto {
     }
 
     private boolean isJson(Map<String, String> request) {
-        return (request.get("Content-Type") != null) &&
-            (request.get("Content-Type").equals("application/json"));
+        return (request.get(StringUtil.CONTENT_TYPE) != null) &&
+            (request.get(StringUtil.CONTENT_TYPE).equals("application/json"));
     }
 }
