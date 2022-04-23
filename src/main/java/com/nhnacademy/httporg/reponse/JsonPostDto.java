@@ -1,7 +1,5 @@
 package com.nhnacademy.httporg.reponse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -51,7 +49,8 @@ public class JsonPostDto implements JsonDto {
 
     public JsonPostDto(Map<String, String> request) {
         args = parseArgs(request.get("path"));
-        data = new HashMap<>();
+//        data = new HashMap<>();
+        data = parseArgs(request.get("body"));
         files = new HashMap<>();
         if (request.get("Content-Disposition") != null) {
             files.put(request.get("Content-Disposition"),
