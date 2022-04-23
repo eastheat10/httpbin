@@ -2,6 +2,7 @@ package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.httporg.utils.StringUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
