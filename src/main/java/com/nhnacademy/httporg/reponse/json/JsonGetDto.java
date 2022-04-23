@@ -2,6 +2,7 @@ package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.httporg.utils.StringUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -14,10 +15,10 @@ public class JsonGetDto implements JsonDto {
     private String url;
 
     public JsonGetDto(Map<String, String> request) {
-        args = parseArgs(request.get("path"));
+        args = parseArgs(request.get(StringUtil.PATH));
         headers = new HashMap<>();
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
+        origin = request.get(StringUtil.ORIGIN);
+        url = request.get(StringUtil.HOST) + request.get(StringUtil.PATH);
         for (String requestKey : request.keySet()) {
             headers.put(requestKey, request.get(requestKey));
         }
@@ -46,11 +47,11 @@ public class JsonGetDto implements JsonDto {
     }
 
     private void dataInit() {
-        headers.remove("body");
-        headers.remove("origin");
-        headers.remove("method");
-        headers.remove("path");
-        headers.remove("protocol");
+        headers.remove(StringUtil.BODY);
+        headers.remove(StringUtil.ORIGIN);
+        headers.remove(StringUtil.METHOD);
+        headers.remove(StringUtil.PATH);
+        headers.remove(StringUtil.PROTOCOL);
     }
 
     private Map<String, String> parseArgs(String path) {
@@ -72,5 +73,4 @@ public class JsonGetDto implements JsonDto {
         }
         return args;
     }
-
 }
