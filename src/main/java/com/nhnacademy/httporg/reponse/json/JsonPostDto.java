@@ -31,13 +31,7 @@ public class JsonPostDto implements JsonDto {
         headers = new LinkedHashMap<>();
         if (isJson(request)) {
             json = new LinkedHashMap<>();
-            String jsonString = request.get("body");
-            StringTokenizer jsonData = new StringTokenizer(jsonString, ":");
-            while (jsonData.hasMoreTokens()) {
-                String key = jsonData.nextToken();
-                String value = jsonData.nextToken();
-                json.put(key, value);
-            }
+            parsingJson(request);
         }
         origin = request.get("origin");
         url = request.get("Host") + request.get("path");
@@ -45,6 +39,19 @@ public class JsonPostDto implements JsonDto {
             headers.put(requestKey, request.get(requestKey));
         }
         dataInit();
+    }
+
+    private void parsingJson(Map<String, String> request) {
+        String jsonParse =
+            request.get("body").substring(1, request.get("body").length() - 1);
+
+        StringTokenizer jsonData = new StringTokenizer(jsonParse, ",");
+        while (jsonData.hasMoreTokens()) {
+            StringTokenizer jsonList = new StringTokenizer(jsonData.nextToken(), ": ");
+            String key = jsonList.nextToken();
+            String value = jsonList.nextToken();
+            json.put(key.substring(1, key.length() - 1), value.substring(1, value.length() - 1));
+        }
     }
 
     @Override
