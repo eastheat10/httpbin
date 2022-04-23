@@ -1,7 +1,6 @@
 package com.nhnacademy.httporg.reponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.httporg.reponse.json.JsonDto;
 import com.nhnacademy.httporg.reponse.json.JsonGetDto;
 import com.nhnacademy.httporg.reponse.json.JsonOrigin;
@@ -14,23 +13,22 @@ public class ResponseBody {
     private final Map<String, String> requestMap;
     private String responseBody;
 
-    public ResponseBody(Map<String, String> map) {requestMap = map;}
+    public ResponseBody(Map<String, String> map) {
+        requestMap = map;
+    }
 
     public String getResponseBody() throws JsonProcessingException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
 
         String method = requestMap.get("method");
         JsonDto dto;
 
         if (method.equals("POST")) {
-             dto = new JsonPostDto(requestMap);
+            dto = new JsonPostDto(requestMap);
         } else {
-             dto = new JsonGetDto(requestMap);
             if (requestMap.get("path").equals("/ip")) {
-                JsonOrigin origin = new JsonOrigin(requestMap.get("origin"));
-                responseBody = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(origin);
-                return responseBody;
+                dto = new JsonOrigin(requestMap.get("origin"));
+            } else {
+                dto = new JsonGetDto(requestMap);
             }
         }
 

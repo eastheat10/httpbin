@@ -78,9 +78,9 @@ public class Request {
         }
 
         String ip = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString()
-                                                                                        .replace(
-                                                                                            "/",
-                                                                                            "");
+            .replace(
+                "/",
+                "");
         requestMap.put("origin", ip);
         requestMap.put("body", inputData[1]);
     }
@@ -99,7 +99,8 @@ public class Request {
             while (matcher.find()) {
                 disposition = matcher.group();
             }
-            requestMap.put(splitContentDisposition[0], disposition.substring(1, disposition.length() - 1));
+            requestMap.put(splitContentDisposition[0],
+                disposition.substring(1, disposition.length() - 1));
         }
     }
 }
