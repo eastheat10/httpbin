@@ -1,11 +1,11 @@
-package com.nhnacademy.httporg.reponse;
+package com.nhnacademy.httpbin.reponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nhnacademy.httporg.reponse.json.JsonDto;
-import com.nhnacademy.httporg.reponse.json.JsonGetDto;
-import com.nhnacademy.httporg.reponse.json.JsonOrigin;
-import com.nhnacademy.httporg.reponse.json.JsonPostDto;
-import com.nhnacademy.httporg.utils.StringUtil;
+import com.nhnacademy.httpbin.reponse.json.JsonDto;
+import com.nhnacademy.httpbin.reponse.json.JsonGetDto;
+import com.nhnacademy.httpbin.reponse.json.JsonOrigin;
+import com.nhnacademy.httpbin.reponse.json.JsonPostDto;
+import com.nhnacademy.httpbin.utils.StringUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 

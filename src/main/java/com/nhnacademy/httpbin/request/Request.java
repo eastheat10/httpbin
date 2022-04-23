@@ -1,6 +1,6 @@
-package com.nhnacademy.httporg.request;
+package com.nhnacademy.httpbin.request;
 
-import com.nhnacademy.httporg.utils.StringUtil;
+import com.nhnacademy.httpbin.utils.StringUtil;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

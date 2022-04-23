@@ -1,4 +1,4 @@
-package com.nhnacademy.httporg.reponse.json;
+package com.nhnacademy.httpbin.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

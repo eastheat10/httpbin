@@ -1,4 +1,4 @@
-package com.nhnacademy.httporg.reponse;
+package com.nhnacademy.httpbin.reponse;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

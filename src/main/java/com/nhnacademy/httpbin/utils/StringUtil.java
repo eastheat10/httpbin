@@ -1,4 +1,4 @@
-package com.nhnacademy.httporg.utils;
+package com.nhnacademy.httpbin.utils;
 
 public class StringUtil {
     
