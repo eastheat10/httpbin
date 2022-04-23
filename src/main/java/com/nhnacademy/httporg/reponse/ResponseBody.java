@@ -17,17 +17,16 @@ public class ResponseBody {
     public String getResponseBody() throws JsonProcessingException {
 
         String method = requestMap.get("method");
-//        JsonDto dto;
+        JsonDto dto;
 
         if (method.equals("POST")) {
-            JsonPostDto dto = new JsonPostDto(requestMap);
-            this.responseBody =
-                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+             dto = new JsonPostDto(requestMap);
         } else {
-            JsonGetDto dto = new JsonGetDto(requestMap);
-            this.responseBody =
-                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+             dto = new JsonGetDto(requestMap);
         }
+
+        this.responseBody =
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(dto);
 
         return responseBody;
     }
