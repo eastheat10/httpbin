@@ -13,6 +13,22 @@ public class JsonGetDto implements JsonDto {
     private String origin;
     private String url;
 
+    public JsonGetDto(Map<String, String> request) {
+        args = parseArgs(request.get("path"));
+        headers = new HashMap<>();
+        origin = request.get("origin");
+        url = request.get("Host") + request.get("path");
+        for (String requestKey : request.keySet()) {
+            headers.put(requestKey, request.get(requestKey));
+        }
+        dataInit();
+    }
+
+    @Override
+    public String bind() throws JsonProcessingException {
+        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
+
     public Map<String, String> getArgs() {
         return args;
     }
@@ -27,17 +43,6 @@ public class JsonGetDto implements JsonDto {
 
     public String getUrl() {
         return url;
-    }
-
-    public JsonGetDto(Map<String, String> request) {
-        args = parseArgs(request.get("path"));
-        headers = new HashMap<>();
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
-        for (String requestKey : request.keySet()) {
-            headers.put(requestKey, request.get(requestKey));
-        }
-        dataInit();
     }
 
     private void dataInit() {
@@ -68,9 +73,4 @@ public class JsonGetDto implements JsonDto {
         return args;
     }
 
-
-    @Override
-    public String bind() throws JsonProcessingException {
-        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-    }
 }
