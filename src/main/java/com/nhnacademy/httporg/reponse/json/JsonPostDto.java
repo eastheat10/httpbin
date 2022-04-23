@@ -20,19 +20,19 @@ public class JsonPostDto implements JsonDto {
     private String url;
 
     public JsonPostDto(Map<String, String> request) {
-        args = parseArgs(request.get("path"));
-        data = request.get("body");
+        args = parseArgs(request.get(StringUtil.PATH));
+        data = request.get(StringUtil.BODY);
         files = new LinkedHashMap<>();
-        if (request.get("Content-Disposition") != null) {
-            files.put(request.get("Content-Disposition"),
-                fileParse(request.get("Content-Disposition")));
-            request.remove("Content-Disposition");
+        if (request.get(StringUtil.CONTENT_DISPOSITION) != null) {
+            files.put(request.get(StringUtil.CONTENT_DISPOSITION),
+                fileParse(request.get(StringUtil.CONTENT_DISPOSITION)));
+            request.remove(StringUtil.CONTENT_DISPOSITION);
         }
         form = new LinkedHashMap<>();
         headers = new LinkedHashMap<>();
         if (isJson(request)) {
             json = new LinkedHashMap<>();
-            String jsonString = request.get("body");
+            String jsonString = request.get(StringUtil.BODY);
             StringTokenizer jsonData = new StringTokenizer(jsonString, ":");
             while (jsonData.hasMoreTokens()) {
                 String key = jsonData.nextToken();
