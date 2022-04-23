@@ -44,7 +44,7 @@ public class Request {
 
         inputData[1] = "";
         for (int i = 1; i < input.length; i++) {
-            inputData[1] += input[i];
+            inputData[1] += input[i] + System.lineSeparator();
         }
 
         parse();

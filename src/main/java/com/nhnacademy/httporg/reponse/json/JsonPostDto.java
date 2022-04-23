@@ -19,25 +19,36 @@ public class JsonPostDto implements JsonDto {
     private String url;
 
     public JsonPostDto(Map<String, String> request) {
+
         args = parseArgs(request.get(StringUtil.PATH));
-        data = request.get(StringUtil.BODY);
+        data = "";
+        if (request.get(StringUtil.CONTENT_TYPE).equals(StringUtil.APPLICATION_JSON)) {
+            data = request.get(StringUtil.BODY);
+        }
+
         files = new LinkedHashMap<>();
         if (request.get(StringUtil.CONTENT_DISPOSITION) != null) {
             files.put(request.get(StringUtil.CONTENT_DISPOSITION),
-                fileParse(request.get(StringUtil.CONTENT_DISPOSITION)));
+                fileParse(request.get(StringUtil.BODY)));
             request.remove(StringUtil.CONTENT_DISPOSITION);
         }
+
         form = new LinkedHashMap<>();
+
         headers = new LinkedHashMap<>();
+        for (String requestKey : request.keySet()) {
+            headers.put(requestKey, request.get(requestKey));
+        }
+
         if (isJson(request)) {
             json = new LinkedHashMap<>();
             parsingJson(request);
         }
+
         origin = request.get(StringUtil.ORIGIN);
+
         url = request.get(StringUtil.HOST) + request.get(StringUtil.PATH);
-        for (String requestKey : request.keySet()) {
-            headers.put(requestKey, request.get(requestKey));
-        }
+
         dataInit();
     }
 
@@ -122,14 +133,14 @@ public class JsonPostDto implements JsonDto {
     private String fileParse(String file) {
         String[] split = file.split("\n");
         String tmp = "";
-        for (int i = 1; i < split.length - 1; i++) {
-            tmp += split[i] + "\n";
+        for (int i = 3; i < split.length - 1; i++) {
+            tmp += split[i] + System.lineSeparator();
         }
         return tmp;
     }
 
     private boolean isJson(Map<String, String> request) {
         return (request.get(StringUtil.CONTENT_TYPE) != null) &&
-            (request.get(StringUtil.CONTENT_TYPE).equals("application/json"));
+            (request.get(StringUtil.CONTENT_TYPE).equals(StringUtil.APPLICATION_JSON));
     }
 }

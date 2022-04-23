@@ -10,6 +10,7 @@ public class StringUtil {
     public static final String HOST = "Host";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_DISPOSITION = "Content-Disposition";
+    public static final String APPLICATION_JSON = "application/json";
 
     private StringUtil() {
     }
