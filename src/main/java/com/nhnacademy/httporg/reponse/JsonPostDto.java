@@ -1,5 +1,8 @@
 package com.nhnacademy.httporg.reponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -7,7 +10,7 @@ import java.util.StringTokenizer;
 public class JsonPostDto implements JsonDto {
 
     private Map<String, String> args;
-    private Map<String, String> data;
+    private String data;
     private Map<String, String> files;
     private Map<String, String> form;
     private Map<String, String> headers;
@@ -19,7 +22,7 @@ public class JsonPostDto implements JsonDto {
         return args;
     }
 
-    public Map<String, String> getData() {
+    public String getData() {
         return data;
     }
 
@@ -47,10 +50,10 @@ public class JsonPostDto implements JsonDto {
         return url;
     }
 
-    public JsonPostDto(Map<String, String> request) {
+    public JsonPostDto(Map<String, String> request) throws JsonProcessingException {
         args = parseArgs(request.get("path"));
 //        data = new HashMap<>();
-        data = parseArgs(request.get("body"));
+        data = request.get("body");
         files = new HashMap<>();
         if (request.get("Content-Disposition") != null) {
             files.put(request.get("Content-Disposition"),
@@ -61,6 +64,14 @@ public class JsonPostDto implements JsonDto {
         headers = new HashMap<>();
         if (isJson(request)) {
             json = new HashMap<>();
+            String jsonString = data;
+            jsonString.replace("{", " ").replace("}", " ");
+            StringTokenizer jsonData = new StringTokenizer(jsonString, ":");
+            while (jsonData.hasMoreTokens()) {
+                String key = jsonData.nextToken();
+                String value = jsonData.nextToken();
+                json.put(key, value);
+            }
         }
         origin = request.get("origin");
         url = request.get("Host") + request.get("path");
@@ -68,6 +79,10 @@ public class JsonPostDto implements JsonDto {
             headers.put(requestKey, request.get(requestKey));
         }
         dataInit();
+    }
+
+    private String jsonParse(String data) {
+        return data;
     }
 
     private void dataInit() {
