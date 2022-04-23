@@ -99,11 +99,11 @@ public class JsonPostDto implements JsonDto {
         return args;
     }
 
-    @Override
-    public String getResponseBody() throws JsonProcessingException {
-//        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-        return "";
-    }
+//    @Override
+//    public String getResponseBody() throws JsonProcessingException {
+////        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+//        return "";
+//    }
 
     private String fileParse(String file) {
         String[] split = file.split("\n");
