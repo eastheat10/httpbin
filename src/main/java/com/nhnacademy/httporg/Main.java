@@ -3,12 +3,8 @@ package com.nhnacademy.httporg;
 import com.nhnacademy.httporg.reponse.ResponseBody;
 import com.nhnacademy.httporg.reponse.ResponseHeader;
 import com.nhnacademy.httporg.request.Request;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,7 +13,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        try(ServerSocket serverSocket = new ServerSocket()) {
+        try (ServerSocket serverSocket = new ServerSocket()) {
             InetSocketAddress address = new InetSocketAddress(80);
             serverSocket.bind(address);
 
@@ -32,28 +28,10 @@ public class Main {
             String responseBody = body.getResponseBody();
             String responseHeader = header.responseHeader(body.getContentLength());
 
+            String response = responseHeader + "\r\n" + responseBody;
+
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            outputStream.write(responseHeader.getBytes(StandardCharsets.UTF_8));
-            outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
-            outputStream.write(responseBody.getBytes(StandardCharsets.UTF_8));
-
-            System.out.println(responseHeader);
-            System.out.println();
-            System.out.println(responseBody);
-
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseHeader.getBytes(
-//                StandardCharsets.UTF_8))))) {
-//                br.lines().forEach(writer::println);
-//            }
-//
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseBody.getBytes(
-//                StandardCharsets.UTF_8))))) {
-//                br.lines().forEach(writer::println);
-//            }
-//
-//            writer.println(responseHeader);
-//            writer.println();
-//            writer.println(responseBody);
+            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
 
         } catch (IOException e) {
             e.printStackTrace();

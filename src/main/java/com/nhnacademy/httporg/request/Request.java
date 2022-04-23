@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ public class Request {
 
     private final InputStream in;
     private String[] inputData = new String[2]; // index 0: request header, index 1: request body
-    private final Map<String, String> requestMap = new HashMap<>();
+    private final Map<String, String> requestMap = new LinkedHashMap<>();
     private final Socket socket;
 
     public Request(Socket socket) throws IOException {
@@ -35,7 +35,7 @@ public class Request {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(bytes)))) {
-            br.lines().peek(System.out::println).forEach(line -> sb.append(line).append(System.lineSeparator()));
+            br.lines().forEach(line -> sb.append(line).append(System.lineSeparator()));
         }
 
         String[] input = sb.toString().trim().split("\n\n");
@@ -78,9 +78,9 @@ public class Request {
         }
 
         String ip = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString()
-                                                                                        .replace(
-                                                                                            "/",
-                                                                                            "");
+            .replace(
+                "/",
+                "");
         requestMap.put("origin", ip);
         requestMap.put("body", inputData[1]);
     }
@@ -99,7 +99,8 @@ public class Request {
             while (matcher.find()) {
                 disposition = matcher.group();
             }
-            requestMap.put(splitContentDisposition[0], disposition.substring(1, disposition.length() - 1));
+            requestMap.put(splitContentDisposition[0],
+                disposition.substring(1, disposition.length() - 1));
         }
     }
 }

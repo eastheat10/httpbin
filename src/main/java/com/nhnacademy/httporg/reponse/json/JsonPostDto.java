@@ -1,9 +1,9 @@
-package com.nhnacademy.httporg.reponse;
+package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -17,6 +17,40 @@ public class JsonPostDto implements JsonDto {
     private Map<String, String> json;
     private String origin;
     private String url;
+
+    public JsonPostDto(Map<String, String> request) {
+        args = parseArgs(request.get("path"));
+        data = request.get("body");
+        files = new LinkedHashMap<>();
+        if (request.get("Content-Disposition") != null) {
+            files.put(request.get("Content-Disposition"),
+                fileParse(request.get("Content-Disposition")));
+            request.remove("Content-Disposition");
+        }
+        form = new LinkedHashMap<>();
+        headers = new LinkedHashMap<>();
+        if (isJson(request)) {
+            json = new LinkedHashMap<>();
+            String jsonString = request.get("body");
+            StringTokenizer jsonData = new StringTokenizer(jsonString, ":");
+            while (jsonData.hasMoreTokens()) {
+                String key = jsonData.nextToken();
+                String value = jsonData.nextToken();
+                json.put(key, value);
+            }
+        }
+        origin = request.get("origin");
+        url = request.get("Host") + request.get("path");
+        for (String requestKey : request.keySet()) {
+            headers.put(requestKey, request.get(requestKey));
+        }
+        dataInit();
+    }
+
+    @Override
+    public String bind() throws JsonProcessingException {
+        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
 
     public Map<String, String> getArgs() {
         return args;
@@ -50,41 +84,6 @@ public class JsonPostDto implements JsonDto {
         return url;
     }
 
-    public JsonPostDto(Map<String, String> request) throws JsonProcessingException {
-        args = parseArgs(request.get("path"));
-//        data = new HashMap<>();
-        data = request.get("body");
-        files = new HashMap<>();
-        if (request.get("Content-Disposition") != null) {
-            files.put(request.get("Content-Disposition"),
-                fileParse(request.get("Content-Disposition")));
-            request.remove("Content-Disposition");
-        }
-        form = new HashMap<>();
-        headers = new HashMap<>();
-        if (isJson(request)) {
-            json = new HashMap<>();
-            String jsonString = data;
-            jsonString.replace("{", " ").replace("}", " ");
-            StringTokenizer jsonData = new StringTokenizer(jsonString, ":");
-            while (jsonData.hasMoreTokens()) {
-                String key = jsonData.nextToken();
-                String value = jsonData.nextToken();
-                json.put(key, value);
-            }
-        }
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
-        for (String requestKey : request.keySet()) {
-            headers.put(requestKey, request.get(requestKey));
-        }
-        dataInit();
-    }
-
-    private String jsonParse(String data) {
-        return data;
-    }
-
     private void dataInit() {
         headers.remove("body");
         headers.remove("origin");
@@ -94,7 +93,7 @@ public class JsonPostDto implements JsonDto {
     }
 
     private Map<String, String> parseArgs(String path) {
-        Map<String, String> args = new HashMap<>();
+        Map<String, String> args = new LinkedHashMap<>();
 
         StringTokenizer st = new StringTokenizer(path, "?");
         st.nextToken();
@@ -112,12 +111,6 @@ public class JsonPostDto implements JsonDto {
         }
         return args;
     }
-
-//    @Override
-//    public String getResponseBody() throws JsonProcessingException {
-////        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-//        return "";
-//    }
 
     private String fileParse(String file) {
         String[] split = file.split("\n");

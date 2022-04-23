@@ -1,8 +1,8 @@
-package com.nhnacademy.httporg.reponse;
+package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -12,6 +12,22 @@ public class JsonGetDto implements JsonDto {
     private Map<String, String> headers;
     private String origin;
     private String url;
+
+    public JsonGetDto(Map<String, String> request) {
+        args = parseArgs(request.get("path"));
+        headers = new LinkedHashMap<>();
+        origin = request.get("origin");
+        url = request.get("Host") + request.get("path");
+        for (String requestKey : request.keySet()) {
+            headers.put(requestKey, request.get(requestKey));
+        }
+        dataInit();
+    }
+
+    @Override
+    public String bind() throws JsonProcessingException {
+        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
 
     public Map<String, String> getArgs() {
         return args;
@@ -29,17 +45,6 @@ public class JsonGetDto implements JsonDto {
         return url;
     }
 
-    public JsonGetDto(Map<String, String> request) {
-        args = parseArgs(request.get("path"));
-        headers = new HashMap<>();
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
-        for (String requestKey : request.keySet()) {
-            headers.put(requestKey, request.get(requestKey));
-        }
-        dataInit();
-    }
-
     private void dataInit() {
         headers.remove("body");
         headers.remove("origin");
@@ -49,7 +54,7 @@ public class JsonGetDto implements JsonDto {
     }
 
     private Map<String, String> parseArgs(String path) {
-        Map<String, String> args = new HashMap<>();
+        Map<String, String> args = new LinkedHashMap<>();
 
         StringTokenizer st = new StringTokenizer(path, "?");
         st.nextToken();
@@ -68,10 +73,4 @@ public class JsonGetDto implements JsonDto {
         return args;
     }
 
-
-//    @Override
-//    public String getResponseBody() throws JsonProcessingException {
-////        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-//        return "";
-//    }
 }
