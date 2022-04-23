@@ -2,7 +2,7 @@ package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -19,17 +19,17 @@ public class JsonPostDto implements JsonDto {
 
     public JsonPostDto(Map<String, String> request) {
         args = parseArgs(request.get("path"));
-        data = new HashMap<>();
-        files = new HashMap<>();
+        data = new LinkedHashMap<>();
+        files = new LinkedHashMap<>();
         if (request.get("Content-Disposition") != null) {
             files.put(request.get("Content-Disposition"),
                 fileParse(request.get("Content-Disposition")));
             request.remove("Content-Disposition");
         }
-        form = new HashMap<>();
-        headers = new HashMap<>();
+        form = new LinkedHashMap<>();
+        headers = new LinkedHashMap<>();
         if (isJson(request)) {
-            json = new HashMap<>();
+            json = new LinkedHashMap<>();
         }
         origin = request.get("origin");
         url = request.get("Host") + request.get("path");
@@ -85,7 +85,7 @@ public class JsonPostDto implements JsonDto {
     }
 
     private Map<String, String> parseArgs(String path) {
-        Map<String, String> args = new HashMap<>();
+        Map<String, String> args = new LinkedHashMap<>();
 
         StringTokenizer st = new StringTokenizer(path, "?");
         st.nextToken();
