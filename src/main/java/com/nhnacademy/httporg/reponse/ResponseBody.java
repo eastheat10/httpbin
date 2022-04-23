@@ -10,9 +10,7 @@ public class ResponseBody {
     private final Map<String, String> requestMap;
     private String responseBody;
 
-    public ResponseBody(Map<String, String> map) {
-        requestMap = map;
-    }
+    public ResponseBody(Map<String, String> map) {requestMap = map;}
 
     public String getResponseBody() throws JsonProcessingException {
 
