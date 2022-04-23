@@ -14,8 +14,13 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Request {
+
+    private static final Logger log = LoggerFactory.getLogger(Request.class);
+
     private static final int MAX_SIZE = 4096;
 
     private final InputStream in;
@@ -53,6 +58,9 @@ public class Request {
             requestMap.get(StringUtil.CONTENT_TYPE).startsWith("multipart/form-data;")) {
             parseMultiPart();
         }
+
+        log.info(System.lineSeparator() + inputData[0]);
+        log.info(System.lineSeparator() + inputData[1]);
 
         return requestMap;
     }
