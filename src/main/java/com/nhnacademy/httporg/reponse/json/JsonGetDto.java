@@ -1,6 +1,7 @@
 package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -68,9 +69,8 @@ public class JsonGetDto implements JsonDto {
     }
 
 
-//    @Override
-//    public String getResponseBody() throws JsonProcessingException {
-////        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
-//        return "";
-//    }
+    @Override
+    public String bind() throws JsonProcessingException {
+        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
 }
