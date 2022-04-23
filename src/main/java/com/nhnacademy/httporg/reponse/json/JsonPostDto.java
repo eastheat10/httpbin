@@ -1,8 +1,8 @@
 package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.httporg.utils.StringUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -19,13 +19,13 @@ public class JsonPostDto implements JsonDto {
     private String url;
 
     public JsonPostDto(Map<String, String> request) {
-        args = parseArgs(request.get("path"));
-        data = request.get("body");
+        args = parseArgs(request.get(StringUtil.PATH));
+        data = request.get(StringUtil.BODY);
         files = new LinkedHashMap<>();
-        if (request.get("Content-Disposition") != null) {
-            files.put(request.get("Content-Disposition"),
-                fileParse(request.get("Content-Disposition")));
-            request.remove("Content-Disposition");
+        if (request.get(StringUtil.CONTENT_DISPOSITION) != null) {
+            files.put(request.get(StringUtil.CONTENT_DISPOSITION),
+                fileParse(request.get(StringUtil.CONTENT_DISPOSITION)));
+            request.remove(StringUtil.CONTENT_DISPOSITION);
         }
         form = new LinkedHashMap<>();
         headers = new LinkedHashMap<>();
@@ -33,8 +33,8 @@ public class JsonPostDto implements JsonDto {
             json = new LinkedHashMap<>();
             parsingJson(request);
         }
-        origin = request.get("origin");
-        url = request.get("Host") + request.get("path");
+        origin = request.get(StringUtil.ORIGIN);
+        url = request.get(StringUtil.HOST) + request.get(StringUtil.PATH);
         for (String requestKey : request.keySet()) {
             headers.put(requestKey, request.get(requestKey));
         }
@@ -43,7 +43,7 @@ public class JsonPostDto implements JsonDto {
 
     private void parsingJson(Map<String, String> request) {
         String jsonParse =
-            request.get("body").substring(1, request.get("body").length() - 1);
+            request.get(StringUtil.BODY).substring(1, request.get(StringUtil.BODY).length() - 1);
 
         StringTokenizer jsonData = new StringTokenizer(jsonParse, ",");
         while (jsonData.hasMoreTokens()) {
@@ -92,11 +92,11 @@ public class JsonPostDto implements JsonDto {
     }
 
     private void dataInit() {
-        headers.remove("body");
-        headers.remove("origin");
-        headers.remove("method");
-        headers.remove("path");
-        headers.remove("protocol");
+        headers.remove(StringUtil.BODY);
+        headers.remove(StringUtil.ORIGIN);
+        headers.remove(StringUtil.METHOD);
+        headers.remove(StringUtil.PATH);
+        headers.remove(StringUtil.PROTOCOL);
     }
 
     private Map<String, String> parseArgs(String path) {
@@ -129,7 +129,7 @@ public class JsonPostDto implements JsonDto {
     }
 
     private boolean isJson(Map<String, String> request) {
-        return (request.get("Content-Type") != null) &&
-            (request.get("Content-Type").equals("application/json"));
+        return (request.get(StringUtil.CONTENT_TYPE) != null) &&
+            (request.get(StringUtil.CONTENT_TYPE).equals("application/json"));
     }
 }
