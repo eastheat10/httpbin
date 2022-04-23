@@ -5,6 +5,7 @@ import com.nhnacademy.httporg.reponse.ResponseHeader;
 import com.nhnacademy.httporg.request.Request;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -31,21 +32,24 @@ public class Main {
             String responseBody = body.getResponseBody();
             String responseHeader = header.responseHeader(body.getContentLength());
 
-            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            outputStream.write(responseHeader.getBytes(StandardCharsets.UTF_8));
+            outputStream.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            outputStream.write(responseBody.getBytes(StandardCharsets.UTF_8));
 
             System.out.println(responseHeader);
             System.out.println();
             System.out.println(responseBody);
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseHeader.getBytes(
-                StandardCharsets.UTF_8))))) {
-                br.lines().forEach(writer::println);
-            }
-
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseBody.getBytes(
-                StandardCharsets.UTF_8))))) {
-                br.lines().forEach(writer::println);
-            }
+//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseHeader.getBytes(
+//                StandardCharsets.UTF_8))))) {
+//                br.lines().forEach(writer::println);
+//            }
+//
+//            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseBody.getBytes(
+//                StandardCharsets.UTF_8))))) {
+//                br.lines().forEach(writer::println);
+//            }
 //
 //            writer.println(responseHeader);
 //            writer.println();
