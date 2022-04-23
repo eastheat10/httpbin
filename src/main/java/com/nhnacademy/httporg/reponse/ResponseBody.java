@@ -34,8 +34,7 @@ public class ResponseBody {
             }
         }
 
-        this.responseBody =
-            objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+        this.responseBody = dto.bind();
 
         return responseBody;
     }
