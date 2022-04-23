@@ -2,8 +2,7 @@ package com.nhnacademy.httporg.reponse.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.httporg.utils.StringUtil;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -15,10 +14,10 @@ public class JsonGetDto implements JsonDto {
     private String url;
 
     public JsonGetDto(Map<String, String> request) {
-        args = parseArgs(request.get(StringUtil.PATH));
-        headers = new HashMap<>();
-        origin = request.get(StringUtil.ORIGIN);
-        url = request.get(StringUtil.HOST) + request.get(StringUtil.PATH);
+        args = parseArgs(request.get("path"));
+        headers = new LinkedHashMap<>();
+        origin = request.get("origin");
+        url = request.get("Host") + request.get("path");
         for (String requestKey : request.keySet()) {
             headers.put(requestKey, request.get(requestKey));
         }
@@ -55,7 +54,7 @@ public class JsonGetDto implements JsonDto {
     }
 
     private Map<String, String> parseArgs(String path) {
-        Map<String, String> args = new HashMap<>();
+        Map<String, String> args = new LinkedHashMap<>();
 
         StringTokenizer st = new StringTokenizer(path, "?");
         st.nextToken();

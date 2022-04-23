@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ public class Request {
 
     private final InputStream in;
     private String[] inputData = new String[2]; // index 0: request header, index 1: request body
-    private final Map<String, String> requestMap = new HashMap<>();
+    private final Map<String, String> requestMap = new LinkedHashMap<>();
     private final Socket socket;
 
     public Request(Socket socket) throws IOException {
