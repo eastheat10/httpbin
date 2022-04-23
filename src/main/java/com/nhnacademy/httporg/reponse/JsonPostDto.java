@@ -51,12 +51,12 @@ public class JsonPostDto implements JsonDto {
 
     public JsonPostDto(Map<String, String> request) {
         args = parseArgs(request.get("path"));
-//        data = request.get("body");
         data = new HashMap<>();
         files = new HashMap<>();
         if (request.get("Content-Disposition") != null) {
             files.put(request.get("Content-Disposition"),
                 fileParse(request.get("Content-Disposition")));
+            request.remove("Content-Disposition");
         }
         form = new HashMap<>();
         headers = new HashMap<>();
@@ -101,7 +101,8 @@ public class JsonPostDto implements JsonDto {
 
     @Override
     public String getResponseBody() throws JsonProcessingException {
-        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+//        return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+        return "";
     }
 
     private String fileParse(String file) {

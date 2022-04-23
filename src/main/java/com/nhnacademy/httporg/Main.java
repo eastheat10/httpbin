@@ -3,11 +3,15 @@ package com.nhnacademy.httporg;
 import com.nhnacademy.httporg.reponse.ResponseBody;
 import com.nhnacademy.httporg.reponse.ResponseHeader;
 import com.nhnacademy.httporg.request.Request;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class Main {
@@ -29,9 +33,23 @@ public class Main {
 
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
-            writer.println(responseHeader);
-            writer.println();
-            writer.println(responseBody);
+            System.out.println(responseHeader);
+            System.out.println();
+            System.out.println(responseBody);
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseHeader.getBytes(
+                StandardCharsets.UTF_8))))) {
+                br.lines().forEach(writer::println);
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseBody.getBytes(
+                StandardCharsets.UTF_8))))) {
+                br.lines().forEach(writer::println);
+            }
+//
+//            writer.println(responseHeader);
+//            writer.println();
+//            writer.println(responseBody);
 
         } catch (IOException e) {
             e.printStackTrace();

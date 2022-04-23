@@ -8,10 +8,8 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +35,7 @@ public class Request {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(
             new InputStreamReader(new ByteArrayInputStream(bytes)))) {
-            br.lines().forEach(line -> sb.append(line).append(System.lineSeparator()));
+            br.lines().peek(System.out::println).forEach(line -> sb.append(line).append(System.lineSeparator()));
         }
 
         String[] input = sb.toString().trim().split("\n\n");
@@ -51,7 +49,8 @@ public class Request {
 
         parse();
 
-        if (requestMap.get("method").equals("POST") && requestMap.get(CONTENT_TYPE).startsWith("multipart/form-data;")) {
+        if (requestMap.get("method").equals("POST") &&
+            requestMap.get(CONTENT_TYPE).startsWith("multipart/form-data;")) {
             parseMultiPart();
         }
 
@@ -78,13 +77,16 @@ public class Request {
             }
         }
 
-        String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+        String ip = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString()
+                                                                                        .replace(
+                                                                                            "/",
+                                                                                            "");
         requestMap.put("origin", ip);
         requestMap.put("body", inputData[1]);
     }
 
     private void parseMultiPart() throws IOException {
-        try(BufferedReader br = new BufferedReader(
+        try (BufferedReader br = new BufferedReader(
             new InputStreamReader(
                 new ByteArrayInputStream(inputData[1].getBytes(StandardCharsets.UTF_8))))) {
             String disposition = null;
@@ -94,10 +96,10 @@ public class Request {
             String[] dispositions = splitContentDisposition[1].split("; ");
             Pattern pattern = Pattern.compile("[\"](.*?)[\"]");
             Matcher matcher = pattern.matcher(dispositions[1]);
-            while(matcher.find()) {
+            while (matcher.find()) {
                 disposition = matcher.group();
             }
-            requestMap.put(splitContentDisposition[0],disposition);
+            requestMap.put(splitContentDisposition[0], disposition.substring(1, disposition.length() - 1));
         }
     }
 }
